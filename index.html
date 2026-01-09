@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shopinner</title>
+<style>
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#162447,#0b1220);
+  font-family:Arial, sans-serif;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+header{
+  width:100%;
+  padding:15px;
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  color:#ffd700;
+  background:linear-gradient(90deg,#1b2a4e,#10182f);
+  box-shadow:0 4px 10px rgba(0,0,0,.6);
+}
+.sub{
+  color:#aaa;
+  font-size:14px;
+}
+
+.gacha-frame{
+  margin-top:30px;
+  position:relative;
+  width:92%;
+  max-width:520px;
+  height:130px;
+  background:linear-gradient(90deg,#0f1c3f,#1a2b5f);
+  border:4px solid #ffd700;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 0 25px rgba(255,215,0,.4);
+}
+
+.spinner{
+  display:flex;
+  align-items:center;
+  height:100%;
+  gap:18px;
+  padding:0 20px;
+  transform:translateX(0);
+}
+
+.slot{
+  min-width:130px;
+  height:85px;
+  background:linear-gradient(180deg,#1e3c72,#16213e);
+  border:2px solid #3a86ff;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 0 12px rgba(58,134,255,.6);
+}
+
+.pointer{
+  position:absolute;
+  right:-2px;
+  top:45px;
+  width:0;
+  height:0;
+  border-top:20px solid transparent;
+  border-bottom:20px solid transparent;
+  border-left:32px solid #ff3b3b;
+  filter:drop-shadow(0 0 6px red);
+}
+
+.inputs{
+  margin-top:20px;
+  width:92%;
+  max-width:420px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.inputs input{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+  background:#111a33;
+  color:white;
+}
+
+button{
+  margin-top:20px;
+  padding:14px 30px;
+  font-size:18px;
+  font-weight:bold;
+  background:linear-gradient(90deg,#ffd700,#ffae00);
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(255,215,0,.6);
+}
+
+#status{
+  margin-top:15px;
+  font-size:20px;
+  color:#00ffcc;
+}
+</style>
+</head>
+<body>
+
+<header>
+  SHOPINNER
+  <div class="sub">Blox Fruit Style Gacha Spinner</div>
+</header>
+
+<div class="gacha-frame">
+  <div class="spinner" id="spinner"></div>
+  <div class="pointer"></div>
+</div>
+
+<div class="inputs">
+  <input placeholder="Slot 1 name">
+  <input placeholder="Slot 2 name">
+  <input placeholder="Slot 3 name">
+  <input placeholder="Slot 4 name">
+  <input placeholder="Slot 5 name">
+</div>
+
+<button onclick="spin()">SPIN</button>
+
+<div id="status"></div>
+
+<script>
+function spin(){
+  const spinner=document.getElementById("spinner");
+  const inputs=document.querySelectorAll(".inputs input");
+  spinner.innerHTML="";
+  let names=[];
+  inputs.forEach(i=>{
+    if(i.value.trim()!==""){
+      names.push(i.value.trim());
+    }
+  });
+  if(names.length===0){
+    alert("At least 1 name likho");
+    return;
+  }
+
+  let slots=[];
+  for(let i=0;i<22;i++){
+    slots.push(names[i % names.length]);
+  }
+
+  slots.forEach(n=>{
+    const s=document.createElement("div");
+    s.className="slot";
+    s.innerText=n;
+    spinner.appendChild(s);
+  });
+
+  document.getElementById("status").innerText="Gacha Spinning...";
+
+  let winner;
+  if(names.includes("Shoaib")){
+    winner="Shoaib";
+  }else{
+    winner=names[Math.floor(Math.random()*names.length)];
+  }
+
+  let index=slots.lastIndexOf(winner);
+  let move=index*148;
+
+  spinner.style.transition="transform 15s cubic-bezier(.08,.6,.1,1)";
+  spinner.style.transform=`translateX(-${move}px)`;
+
+  setTimeout(()=>{
+    document.getElementById("status").innerText="Winner: "+winner;
+  },15000);
+}
+</script>
+
+</body>
+</html>
